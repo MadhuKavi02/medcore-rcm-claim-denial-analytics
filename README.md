@@ -23,7 +23,7 @@ The project answers this question through a full analytics workflow: from profil
 | Tool | Purpose |
 |------|---------|
 | **Python** (pandas, Jupyter Notebook) | Data profiling, cleaning, validation |
-| **SQL Server** (T-SQL, SSMS) | Structured business analysis and reconciliation |
+| **SQL Server** (SQL, SSMS) | Structured business analysis and reconciliation |
 | **Power BI Desktop** (DAX) | Interactive four-page dashboard |
 
 ---
@@ -78,8 +78,6 @@ Findings & Recommendations
 - **Nulls kept on purpose:** `Denial_Reason` is null for non-denied claims, authorization dates are null when no request exists, and payment dates are null where nothing was paid. Filling them with "Unknown" or invented dates would have created false data.
 - **Floating-point mismatch investigated:** an initial check flagged 10,895 reconciliation differences. They were precision differences, not errors, and rounding to two decimals brought the count to zero.
 - **Cleaning was light:** date-type standardization and monetary rounding. The data was generated to be consistent, so no rows were removed.
-- Raw files were kept unchanged, and cleaned copies were saved separately.
-
 ---
 
 ## 🗄️ Phase 2 — SQL Server: Business Analysis
