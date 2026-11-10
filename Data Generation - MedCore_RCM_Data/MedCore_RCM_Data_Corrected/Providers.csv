@@ -1,0 +1,41 @@
+Provider_ID,Provider_Name,Location,Provider_Type,Specialty_Profile
+PR001,MedCore Provider 01,Chennai Central,Hospital,Cardiology|General Medicine
+PR002,MedCore Provider 02,Chennai East,Hospital,Radiology|General Medicine
+PR003,MedCore Provider 03,Chennai North,Hospital,Orthopedics|Emergency Medicine
+PR004,MedCore Provider 04,Chennai South,Hospital,Oncology|General Medicine
+PR005,MedCore Provider 05,Chennai West,Hospital,Neurology|General Medicine
+PR006,MedCore Provider 06,Coimbatore,Hospital,Gastroenterology|General Medicine
+PR007,MedCore Provider 07,Chennai Central,Hospital,General Medicine|Emergency Medicine
+PR008,MedCore Provider 08,Chennai East,Hospital,Cardiology|Radiology|General Medicine
+PR009,MedCore Provider 09,Chennai North,Hospital,Cardiology|General Medicine
+PR010,MedCore Provider 10,Chennai South,Hospital,Radiology|General Medicine
+PR011,MedCore Provider 11,Chennai West,Hospital,Orthopedics|Emergency Medicine
+PR012,MedCore Provider 12,Coimbatore,Hospital,Oncology|General Medicine
+PR013,MedCore Provider 13,Chennai Central,Hospital,Neurology|General Medicine
+PR014,MedCore Provider 14,Chennai East,Hospital,Gastroenterology|General Medicine
+PR015,MedCore Provider 15,Chennai North,Hospital,General Medicine|Emergency Medicine
+PR016,MedCore Provider 16,Chennai South,Hospital,Cardiology|Radiology|General Medicine
+PR017,MedCore Provider 17,Chennai West,Hospital,Cardiology|General Medicine
+PR018,MedCore Provider 18,Coimbatore,Hospital,Radiology|General Medicine
+PR019,MedCore Provider 19,Chennai Central,Hospital,Orthopedics|Emergency Medicine
+PR020,MedCore Provider 20,Chennai East,Hospital,Oncology|General Medicine
+PR021,MedCore Provider 21,Chennai North,Hospital,Neurology|General Medicine
+PR022,MedCore Provider 22,Chennai South,Hospital,Gastroenterology|General Medicine
+PR023,MedCore Provider 23,Chennai West,Hospital,General Medicine|Emergency Medicine
+PR024,MedCore Provider 24,Coimbatore,Hospital,Cardiology|Radiology|General Medicine
+PR025,MedCore Provider 25,Chennai Central,Specialty Center,Cardiology|General Medicine
+PR026,MedCore Provider 26,Chennai East,Specialty Center,Radiology|General Medicine
+PR027,MedCore Provider 27,Chennai North,Specialty Center,Orthopedics|Emergency Medicine
+PR028,MedCore Provider 28,Chennai South,Specialty Center,Oncology|General Medicine
+PR029,MedCore Provider 29,Chennai West,Specialty Center,Neurology|General Medicine
+PR030,MedCore Provider 30,Coimbatore,Specialty Center,Gastroenterology|General Medicine
+PR031,MedCore Provider 31,Chennai Central,Specialty Center,General Medicine|Emergency Medicine
+PR032,MedCore Provider 32,Chennai East,Specialty Center,Cardiology|Radiology|General Medicine
+PR033,MedCore Provider 33,Chennai North,Specialty Center,Cardiology|General Medicine
+PR034,MedCore Provider 34,Chennai South,Specialty Center,Radiology|General Medicine
+PR035,MedCore Provider 35,Chennai West,Specialty Center,Orthopedics|Emergency Medicine
+PR036,MedCore Provider 36,Coimbatore,Specialty Center,Oncology|General Medicine
+PR037,MedCore Provider 37,Chennai Central,Specialty Center,Neurology|General Medicine
+PR038,MedCore Provider 38,Chennai East,Specialty Center,Gastroenterology|General Medicine
+PR039,MedCore Provider 39,Chennai North,Specialty Center,General Medicine|Emergency Medicine
+PR040,MedCore Provider 40,Chennai South,Specialty Center,Cardiology|Radiology|General Medicine

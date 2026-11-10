@@ -1,0 +1,25 @@
+Procedure_Code,Procedure_Name,Specialty,Authorization_Required,Min_Claim_Amount,Max_Claim_Amount
+PC001,ECG,Cardiology,False,800,2500
+PC002,Echocardiogram,Cardiology,False,2500,6000
+PC003,Cardiac Stress Test,Cardiology,True,3000,7500
+PC004,Cardiac Catheterization,Cardiology,True,45000,120000
+PC005,X-Ray,Radiology,False,500,2000
+PC006,CT Scan,Radiology,True,5000,15000
+PC007,MRI Brain,Radiology,True,8000,20000
+PC008,MRI Spine,Radiology,True,9000,22000
+PC009,Ultrasound,Radiology,False,1000,4000
+PC010,Fracture Treatment,Orthopedics,False,8000,30000
+PC011,Joint Injection,Orthopedics,True,3000,10000
+PC012,Knee Replacement,Orthopedics,True,150000,350000
+PC013,Chemotherapy,Oncology,True,20000,100000
+PC014,Radiation Therapy,Oncology,True,30000,150000
+PC015,Oncology Consultation,Oncology,False,1000,4000
+PC016,EEG,Neurology,True,2000,6000
+PC017,Neurology Consultation,Neurology,False,1000,4000
+PC018,Endoscopy,Gastroenterology,True,4000,12000
+PC019,Colonoscopy,Gastroenterology,True,5000,15000
+PC020,Gastroenterology Consultation,Gastroenterology,False,1000,4000
+PC021,General Consultation,General Medicine,False,500,2000
+PC022,Lab Panel,General Medicine,False,1000,6000
+PC023,Emergency Consultation,Emergency Medicine,False,1000,5000
+PC024,Emergency Procedure,Emergency Medicine,True,5000,40000

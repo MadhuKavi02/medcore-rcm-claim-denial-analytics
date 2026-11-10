@@ -1,0 +1,9 @@
+Payer_ID,Payer_Name,Payer_Type
+PY001,SecureHealth Insurance,Private
+PY002,PrimeCare Health,Private
+PY003,MediSure Insurance,Private
+PY004,WellLife Health,Private
+PY005,NationalCare Health,Government
+PY006,United Medical Assurance,Private
+PY007,HealthFirst Insurance,Private
+PY008,CareShield Health,Private
