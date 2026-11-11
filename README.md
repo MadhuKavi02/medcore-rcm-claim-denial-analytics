@@ -1,123 +1,227 @@
 # MedCore RCM – Healthcare Claim Denial Analytics
 
+An end-to-end healthcare Revenue Cycle Management (RCM) analytics project focused on identifying insurance claim denials, analyzing denial patterns, monitoring payment recovery, and evaluating authorization performance using Python, Microsoft SQL Server, and Power BI.
+
 ## Project Overview
 
-MedCore RCM – Healthcare Claim Denial Analytics is a data analytics portfolio project focused on understanding healthcare claim denials, payment recovery, and outstanding balances.
+Healthcare organizations process large volumes of insurance claims, but not all claims are successfully reimbursed. Claim denials, delayed authorizations, and outstanding payments can affect revenue collection and create additional administrative work.
 
-The project uses a synthetic healthcare claims dataset to explore claim patterns, identify common denial reasons, compare payer performance, and examine outstanding amounts across different claim categories.
+This project simulates a healthcare network, **MedCore Health Network**, to analyze its revenue cycle operations and identify areas contributing to claim denials and outstanding payments.
 
-The analysis was carried out using **Python, SQL Server, and Power BI**, covering data validation, SQL-based analysis, and interactive dashboard development.
+The analysis focuses on understanding:
+- How many insurance claims are denied?
+- What are the major reasons for claim denials?
+- Which insurance payers have higher denial rates?
+- Which medical specialties and procedures experience more denials?
+- How much denied claim value remains outstanding?
+- How efficiently are insurance authorizations processed?
+- What is the current payment and recovery status?
+
+The objective is to transform raw healthcare transaction data into meaningful business insights through data validation, SQL analysis, and interactive Power BI dashboards.
+
+**Note:** This project uses synthetic data generated for portfolio and analytical purposes. It does not contain real patient or insurance records.
 
 ## Business Objectives
 
-The main objective is to understand where claim denials occur and how they contribute to outstanding payment amounts.
+- Measure the overall claim denial rate and total denied claim value.
+- Identify the most common denial reasons and their financial impact.
+- Compare denial performance across insurance payers.
+- Analyze denial trends by medical specialty, procedure, and location.
+- Monitor paid amounts, outstanding balances, and recovery status.
+- Evaluate authorization approval turnaround time.
+- Identify opportunities to improve revenue recovery and reduce claim processing issues.
 
-The analysis focuses on the following questions:
+## Technology Stack
 
-- What is the overall claim denial rate?
-- Which denial reasons contribute most to denied claims?
-- How do denial rates vary across payers, specialties, and procedures?
-- How much of the denied claim amount has been recovered, and how much remains outstanding?
-- What does the authorization approval turnaround look like?
-- Do high-value claims account for a significant share of outstanding balances?
-
-## Tools and Technologies
-
-| Tool | Purpose |
+| Technology | Purpose |
 |---|---|
-| Python | Data loading, profiling, and initial validation |
-| SQL Server | Database management, data validation, and business analysis |
-| Power BI | Data modelling, DAX measures, and interactive reporting |
-| Jupyter Notebook | Python-based data exploration |
+| Python | Synthetic data generation and data validation |
+| Pandas & NumPy | Data manipulation, profiling, and quality checks |
+| Microsoft SQL Server | Relational data storage and SQL-based analysis |
+| SQL | Joins, aggregations, CASE statements, CTE/window-function analysis |
+| Power BI | Interactive dashboards and business reporting |
+| DAX | KPI calculations and analytical measures |
+| Excel / CSV | Dataset storage and data exchange |
 
 ## Dataset Overview
 
-The project uses a **synthetic dataset representing healthcare claim and payment records for 2025**. It contains no real patient or organizational information.
+The project contains seven related datasets representing master data and transaction data.
 
-The database consists of seven related tables with 100,072 records in total.
+| Dataset | Rows | Columns | Description |
+|---|---:|---:|---|
+| Patients | 15,000 | 3 | Patient demographic information |
+| Payers | 8 | 3 | Insurance payer details |
+| Providers | 40 | 5 | Healthcare provider information |
+| Procedures | 24 | 6 | Medical procedures, specialties, and authorization requirements |
+| Claims | 50,000 | 12 | Insurance claim details, amounts, status, and denial information |
+| Authorization | 50,000 | 6 | Authorization requests, approval status, and dates |
+| Payments | 50,000 | 5 | Payment amounts, payment dates, and recovery information |
 
-| Table | Records | Description |
-|---|---:|---|
-| Patients | 15,000 | Patient demographic details |
-| Payers | 8 | Insurance payer information |
-| Providers | 40 | Healthcare provider details |
-| Procedures | 24 | Procedure and authorization details |
-| Claims | 50,000 | Claim amounts, dates, status, and denial information |
-| Authorization | 50,000 | Authorization requests and approval details |
-| Payments | 50,000 | Payment amounts and outstanding balances |
+**Total:** 7 datasets containing 165,112 records.
+
+### Key Dataset Relationships
+
+The transaction datasets are connected using `Claim_ID`.
+
+- Claims → Patients using `Patient_ID`
+- Claims → Payers using `Payer_ID`
+- Claims → Providers using `Provider_ID`
+- Claims → Procedures using `Procedure_Code`
+- Claims → Authorization using `Claim_ID`
+- Claims → Payments using `Claim_ID`
+
+Each claim has one corresponding authorization record and one payment record in this simulated dataset.
 
 ## Project Workflow
 
-### 1. Data Profiling and Validation – Python
+### 1. Synthetic Data Generation – Python
 
-- Loaded the source CSV files into Jupyter Notebook.
-- Reviewed dataset dimensions, column types, and data distributions.
-- Checked missing values, duplicate records, and key fields.
-- Performed initial validation to understand the structure and quality of the data.
+Generated a healthcare revenue-cycle dataset using Python, Pandas, and NumPy.
 
-### 2. Database Development and Analysis – SQL Server
+The data generation process includes:
+- Creating patient, payer, provider, and procedure master datasets.
+- Generating 50,000 healthcare insurance claims.
+- Assigning claim amounts based on procedure-level minimum and maximum values.
+- Generating paid, denied, and pending claim statuses.
+- Creating authorization records based on procedure authorization requirements.
+- Generating payment amounts, outstanding balances, and recovery statuses.
+- Applying business rules to maintain consistency between claims, authorization, and payment records.
 
-- Imported the seven datasets into a SQL Server database.
-- Established the relationships between claims and their related tables.
-- Validated record counts, key uniqueness, and data consistency.
-- Checked claim amounts, payment amounts, outstanding balances, and authorization details.
-- Wrote SQL queries to investigate denial patterns, payer performance, recovery amounts, and outstanding balances.
+A fixed random seed was used to support reproducible data generation.
 
-### 3. Data Modelling and Reporting – Power BI
+### 2. Data Profiling & Quality Validation – Python
 
-- Connected Power BI to the SQL Server database.
-- Created relationships between the claims data and related tables.
-- Developed DAX measures for claim counts, denial rates, payment amounts, and outstanding balances.
-- Built a four-page interactive report to present the findings.
+Performed data profiling and business-rule validation before loading the datasets into SQL Server.
 
-## Power BI Dashboard
+Key validation activities:
+- Checked dataset dimensions, missing values, and duplicate records.
+- Validated primary keys and foreign-key references.
+- Checked claim status against denial flags.
+- Verified authorization requirements against the procedure master dataset.
+- Validated claim amounts against procedure-level limits.
+- Checked payment amounts and outstanding balance calculations.
+- Validated date fields and authorization timing.
+- Checked consistency between claim status and payment recovery status.
+- Verified claim-to-authorization and claim-to-payment relationships.
 
-The report is organised into four pages.
+The corrected generation notebook also includes assertion-based validation to prevent exporting datasets when critical business rules fail.
 
-### Page 1 – Claim Denial Overview
+### 3. SQL Analysis – Microsoft SQL Server
 
-Provides an overall view of claim performance through key metrics and visualisations.
+Loaded the validated datasets into the `MedCore_RCM_Analytics` database.
 
-Includes:
-- Total claims, denied claims, and denial rate
-- Total claim value, paid amount, and outstanding amount
+Performed business-oriented analysis using SQL queries.
+
+**Key SQL analysis areas:**
+
+1. Overall claim denial rate and claim status distribution.
+2. Denial analysis by reason.
+3. Comparison of denial rates across insurance payers.
+4. Denial reasons by payer.
+5. Recovery performance of denied claims.
+6. Denial rates by medical specialty.
+7. Denial rates by medical procedure.
+8. Authorization status and denial performance.
+9. Outstanding denied amounts by denial reason.
+
+SQL techniques used:
+- SELECT, WHERE, GROUP BY, ORDER BY
+- INNER JOIN
+- CASE WHEN
+- Aggregate functions such as COUNT, SUM, and AVG
+- NULLIF and CAST
+- Window functions
+- Transaction-based update validation
+
+### 4. Power BI Dashboard Development
+
+Developed an interactive Power BI dashboard consisting of four analytical pages.
+
+**Page 1 – Claim Denial Overview**
+
+Provides a high-level view of healthcare claim performance.
+
+Key KPIs:
+- Total Claims
+- Total Paid Amount
+- Outstanding Amount
+- Denied Claims
+- Denial Rate
+- Total Claim Value
+
+Visualizations:
+- Outstanding rate by denial status
 - Monthly denial rate trend
-- Denial rate by payer
-- Outstanding rate by denial reason and claim status
+- Denial rate by insurance payer
+- Outstanding rate by denial reason
 
-### Page 2 – Denial Root Causes
+**Page 2 – Denial Root Cause Analysis**
 
-Focuses on the reasons behind denied claims and the value associated with them.
+Focuses on identifying the major reasons behind claim denials.
 
-Includes:
+Visualizations:
+- Top 10 procedures by denied claim value
+- Denial rate by medical specialty
 - Denied claim value by denial reason
-- Denied claim count by denial reason
-- Denial rate by specialty
-- Top procedures by denied claim value
 - Outstanding denied amount by denial reason
+- Denied claim count by denial reason
 
-### Page 3 – Payment and Outstanding Analysis
+**Page 3 – Payment & Outstanding Analysis**
 
-Examines payment recovery and outstanding balances across claim categories and providers.
+Evaluates payment collection and outstanding balances.
 
-Includes:
+Visualizations:
 - Outstanding amount by claim value category
 - Outstanding amount by recovery status
-- Top providers by outstanding amount
-- Unpaid share by payer
+- Top 10 providers by outstanding amount
+- Unpaid share by insurance payer
 
-### Page 4 – Payer, Authorization and Denial Analysis
+**Page 4 – Payer, Authorization & Denial Analysis**
 
-Brings together payer-level denial exposure and authorization turnaround information.
+Provides a detailed view of payer performance and authorization processing.
 
-Includes:
+Visualizations:
 - Outstanding amount by claim status
-- Authorization approval turnaround distribution
+- Approved authorizations by approval time category
 - Denied claim value by payer and denial reason
 
-## Key Findings
+Interactive slicers allow analysis by payer, location, and medical specialty.
 
-The analysis produced the following observations from the synthetic dataset:
+## DAX Measures & Calculated Columns
+
+Created DAX measures and calculated columns to support dashboard KPIs and business analysis.
+
+Key measures include:
+- Total Claims
+- Total Claim Value
+- Total Paid Amount
+- Total Outstanding Amount
+- Denied Claims
+- Denial Rate
+- Denied Claim Value
+- Denied Outstanding Amount
+- Outstanding Rate
+- Paid Rate
+- Approved Count
+- Average Approval Days
+- Median Approval Days
+- Approved Within 3 Days %
+- Partially Collected Claims
+- Unrecovered Claims
+- Reconciliation Difference
+
+Calculated columns include:
+- Approval Days
+- Approval Time Category
+- Claim Value Category
+- Denial Status
+- Service To Payment Days
+
+A separate Date Table was created to support date-based reporting.
+
+## Key Business Findings
+
+Based on the generated dataset and Power BI analysis:
 
 | Metric | Result |
 |---|---:|
@@ -127,40 +231,87 @@ The analysis produced the following observations from the synthetic dataset:
 | Total Claim Value | ₹781.29 Million |
 | Total Paid Amount | ₹649.62 Million |
 | Total Outstanding Amount | ₹131.67 Million |
+| Denied Claim Value | ₹83.72 Million |
 
-Other observations:
+### Important Insights
 
-- **Denial reasons:** Coding Error and Documentation Missing together account for approximately 45% of denied claims.
-- **Payer performance:** PrimeCare Health has the highest denial rate at 10.49%, while MediSure Insurance has the lowest at 6.31%.
-- **Recovery analysis:** Approximately 43.09% of the denied claim value is covered by recorded payments, with the remaining amount outstanding.
-- **High-value claims:** Claims valued at ₹1 lakh or more represent 3.75% of all claims but contribute approximately 48.6% of the total outstanding amount.
-- **Authorization turnaround:** The average approval time is approximately 2.01 days, and around 80.04% of approved authorizations were processed within three days.
+**1. Major Denial Reasons**
 
-## Business Observations
+Coding Error (946 claims) and Documentation Missing (916 claims) are the two largest denial categories, together representing approximately 45.01% of denied claims.
 
-Based on the findings, the following areas may be worth reviewing:
+**2. Payer Performance**
 
-- Review coding and documentation processes, as these account for a considerable share of denials.
-- Monitor payer-level denial patterns to identify areas requiring further investigation.
-- Pay closer attention to high-value claims because they contribute significantly to outstanding balances.
-- Monitor authorization turnaround and identify claims that may require earlier follow-up.
+PrimeCare Health has the highest denial rate at 10.49%, while MediSure Insurance has the lowest denial rate at 6.31%.
 
-These are observations and potential areas for investigation based on the dataset, not confirmed operational improvements.
+**3. Financial Impact of Denials**
 
-## Data Limitations
+Coding Error contributes approximately ₹21.10 million in denied claim value, followed by Medical Necessity at ₹18.67 million.
 
-- The dataset is synthetic and was created for portfolio analysis. Results should not be interpreted as actual healthcare industry performance.
-- Claim submission and receipt dates are not available. Therefore, the actual payer processing time cannot be calculated from this dataset.
-- Some authorization and denial patterns require additional claim-level information to establish the exact reason behind an outcome.
+**4. Outstanding Amount**
+
+The overall outstanding amount is approximately ₹131.67 million. The dashboard also highlights differences in outstanding balances across claim statuses and recovery categories.
+
+**5. Authorization Performance**
+
+The dashboard categorizes approved authorizations based on turnaround time, helping evaluate the time taken to process authorization requests.
+
+## Project Structure
+
+The following is the recommended GitHub repository structure for organizing the project files:
+
+```text
+MedCore-RCM-Healthcare-Analytics/
+│
+├── README.md
+│
+├── Data/
+│   ├── Patients.csv
+│   ├── Payers.csv
+│   ├── Providers.csv
+│   ├── Procedures.csv
+│   ├── Claims.csv
+│   ├── Authorization.csv
+│   └── Payments.csv
+│
+├── Python/
+│   ├── MedCore_RCM_Data_Generation_Corrected.ipynb
+│   └── MedCore_RCM_Data_Profiling.ipynb
+│
+├── SQL/
+│   └── Final_RCM_SQL_Analysis.sql
+│
+├── PowerBI/
+│   ├── MedCore_RCM_Dashboard.pbix
+│   ├── DAX.txt
+│   └── Dashboard_Preview.pdf
+│
+└── Screenshots/
+    ├── Claim_Denial_Overview.png
+    ├── Denial_Root_Cause.png
+    ├── Payment_Outstanding_Analysis.png
+    └── Payer_Authorization_Analysis.png
+```
+
+## How to Run the Project
+
+1. Clone or download this repository.
+2. Install Python and the required libraries: `pandas`, `numpy`, and `jupyter`.
+3. Run `MedCore_RCM_Data_Generation_Corrected.ipynb` to generate the seven CSV datasets.
+4. Run `MedCore_RCM_Data_Profiling.ipynb` to perform data quality checks and profiling.
+5. Create the `MedCore_RCM_Analytics` database in Microsoft SQL Server.
+6. Import the generated CSV files into SQL Server using the appropriate table structures and data types.
+7. Execute `Final_RCM_SQL_Analysis.sql` to perform the SQL analysis.
+8. Open the Power BI report and connect it to the SQL Server database.
+9. Review the DAX measures and explore the four interactive dashboard pages.
 
 ## Project Outcome
 
-This project demonstrates an end-to-end analytics workflow, starting with data profiling and validation in Python, followed by SQL-based investigation and Power BI reporting.
+This project demonstrates an end-to-end Data Analytics workflow, starting from synthetic data generation and data quality validation to SQL-based business analysis and interactive Power BI reporting.
 
-It provided practical experience in working with relational datasets, writing analytical SQL queries, developing DAX measures, and presenting business findings through an interactive dashboard.
+It showcases practical skills in Python, SQL, data modeling, business-rule validation, DAX, KPI development, and data visualization, with a focus on healthcare revenue-cycle operations and insurance claim denial analysis.
 
-## Author
+---
 
-**Madhu**
+**Project Domain:** Healthcare Analytics | Revenue Cycle Management (RCM)
 
-Aspiring Data Analyst | SQL | Python | Power BI | Excel
+**Tools:** Python | SQL Server | Power BI | DAX
