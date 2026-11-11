@@ -21,27 +21,13 @@ The objective is to transform raw healthcare transaction data into meaningful bu
 
 **Note:** This project uses synthetic data generated for portfolio and analytical purposes. It does not contain real patient or insurance records.
 
-## Business Objectives
-
-- Measure the overall claim denial rate and total denied claim value.
-- Identify the most common denial reasons and their financial impact.
-- Compare denial performance across insurance payers.
-- Analyze denial trends by medical specialty, procedure, and location.
-- Monitor paid amounts, outstanding balances, and recovery status.
-- Evaluate authorization approval turnaround time.
-- Identify opportunities to improve revenue recovery and reduce claim processing issues.
-
 ## Technology Stack
 
-| Technology | Purpose |
+| Tool | Application |
 |---|---|
-| Python | Synthetic data generation and data validation |
-| Pandas & NumPy | Data manipulation, profiling, and quality checks |
-| Microsoft SQL Server | Relational data storage and SQL-based analysis |
-| SQL | Joins, aggregations, CASE statements, CTE/window-function analysis |
-| Power BI | Interactive dashboards and business reporting |
-| DAX | KPI calculations and analytical measures |
-| Excel / CSV | Dataset storage and data exchange |
+| Python (Pandas, NumPy) | Synthetic dataset generation, data profiling, and validation |
+| Microsoft SQL Server (T-SQL) | Data storage, relational analysis, and business queries |
+| Power BI (DAX) | Data modeling, KPI development, and interactive dashboard creation |
 
 ## Dataset Overview
 
@@ -104,8 +90,6 @@ Key validation activities:
 - Checked consistency between claim status and payment recovery status.
 - Verified claim-to-authorization and claim-to-payment relationships.
 
-The corrected generation notebook also includes assertion-based validation to prevent exporting datasets when critical business rules fail.
-
 ### 3. SQL Analysis – Microsoft SQL Server
 
 Loaded the validated datasets into the `MedCore_RCM_Analytics` database.
@@ -131,7 +115,6 @@ SQL techniques used:
 - Aggregate functions such as COUNT, SUM, and AVG
 - NULLIF and CAST
 - Window functions
-- Transaction-based update validation
 
 ### 4. Power BI Dashboard Development
 
@@ -187,37 +170,75 @@ Visualizations:
 
 Interactive slicers allow analysis by payer, location, and medical specialty.
 
+
 ## DAX Measures & Calculated Columns
 
-Created DAX measures and calculated columns to support dashboard KPIs and business analysis.
+Created key DAX measures and calculated columns for claim denial analysis, outstanding payment tracking, and authorization turnaround analysis.
 
-Key measures include:
-- Total Claims
-- Total Claim Value
-- Total Paid Amount
-- Total Outstanding Amount
-- Denied Claims
-- Denial Rate
-- Denied Claim Value
-- Denied Outstanding Amount
-- Outstanding Rate
-- Paid Rate
-- Approved Count
-- Average Approval Days
-- Median Approval Days
-- Approved Within 3 Days %
-- Partially Collected Claims
-- Unrecovered Claims
-- Reconciliation Difference
+### Key DAX Formulas
 
-Calculated columns include:
-- Approval Days
-- Approval Time Category
-- Claim Value Category
-- Denial Status
-- Service To Payment Days
+**1. Denial Rate**
+```dax
+Denial Rate =
+DIVIDE(
+    [Denied Claims],
+    [Total Claims],
+    0
+)
+```
 
-A separate Date Table was created to support date-based reporting.
+**2. Denied Claim Value**
+```dax
+Denied Claim Value =
+CALCULATE(
+    [Total Claim Value],
+    Claims[Denial_Flag] = TRUE()
+)
+```
+
+**3. Denied Outstanding Rate**
+```dax
+Denied Outstanding Rate =
+DIVIDE(
+    [Denied Outstanding Amount],
+    [Denied Claim Value],
+    0
+)
+```
+
+**4. Outstanding Rate**
+```dax
+Outstanding Rate =
+DIVIDE(
+    [Total Outstanding Amount],
+    [Total Claim Value],
+    0
+)
+```
+
+**5. Reconciliation Difference**
+```dax
+Reconciliation Difference =
+ROUND(
+    [Total Claim Value] - [Total Paid Amount] - [Total Outstanding Amount],
+    2
+)
+```
+
+**6. Approval Days (Calculated Column)**
+```dax
+Approval Days =
+IF(
+    NOT ISBLANK(Authorization[Approval_Date])
+        && NOT ISBLANK(Authorization[Request_Date]),
+    DATEDIFF(
+        Authorization[Request_Date],
+        Authorization[Approval_Date],
+        DAY
+    )
+)
+```
+
 
 ## Key Business Findings
 
@@ -254,63 +275,6 @@ The overall outstanding amount is approximately ₹131.67 million. The dashboard
 **5. Authorization Performance**
 
 The dashboard categorizes approved authorizations based on turnaround time, helping evaluate the time taken to process authorization requests.
-
-## Project Structure
-
-The following is the recommended GitHub repository structure for organizing the project files:
-
-```text
-MedCore-RCM-Healthcare-Analytics/
-│
-├── README.md
-│
-├── Data/
-│   ├── Patients.csv
-│   ├── Payers.csv
-│   ├── Providers.csv
-│   ├── Procedures.csv
-│   ├── Claims.csv
-│   ├── Authorization.csv
-│   └── Payments.csv
-│
-├── Python/
-│   ├── MedCore_RCM_Data_Generation_Corrected.ipynb
-│   └── MedCore_RCM_Data_Profiling.ipynb
-│
-├── SQL/
-│   └── Final_RCM_SQL_Analysis.sql
-│
-├── PowerBI/
-│   ├── MedCore_RCM_Dashboard.pbix
-│   ├── DAX.txt
-│   └── Dashboard_Preview.pdf
-│
-└── Screenshots/
-    ├── Claim_Denial_Overview.png
-    ├── Denial_Root_Cause.png
-    ├── Payment_Outstanding_Analysis.png
-    └── Payer_Authorization_Analysis.png
-```
-
-## How to Run the Project
-
-1. Clone or download this repository.
-2. Install Python and the required libraries: `pandas`, `numpy`, and `jupyter`.
-3. Run `MedCore_RCM_Data_Generation_Corrected.ipynb` to generate the seven CSV datasets.
-4. Run `MedCore_RCM_Data_Profiling.ipynb` to perform data quality checks and profiling.
-5. Create the `MedCore_RCM_Analytics` database in Microsoft SQL Server.
-6. Import the generated CSV files into SQL Server using the appropriate table structures and data types.
-7. Execute `Final_RCM_SQL_Analysis.sql` to perform the SQL analysis.
-8. Open the Power BI report and connect it to the SQL Server database.
-9. Review the DAX measures and explore the four interactive dashboard pages.
-
-## Project Outcome
-
-This project demonstrates an end-to-end Data Analytics workflow, starting from synthetic data generation and data quality validation to SQL-based business analysis and interactive Power BI reporting.
-
-It showcases practical skills in Python, SQL, data modeling, business-rule validation, DAX, KPI development, and data visualization, with a focus on healthcare revenue-cycle operations and insurance claim denial analysis.
-
----
 
 **Project Domain:** Healthcare Analytics | Revenue Cycle Management (RCM)
 
