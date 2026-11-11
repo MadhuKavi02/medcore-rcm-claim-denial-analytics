@@ -1,217 +1,355 @@
-# 🏥 MedCore RCM — Healthcare Claim Denial Analytics
+# MedCore RCM — Healthcare Claim Denial Analytics
 
-> **End-to-end portfolio analytics project simulating revenue cycle management at a fictional Indian health network using Python, SQL Server, and Power BI.**
-
----
-
-## 📌 Project Overview
-
-MedCore RCM is a complete Data Analyst portfolio project built around a fictional multi-location health network — **MedCore Health Network** — processing insurance claims across six locations, 40 providers, eight specialties and eight payers.
-
-The core business question driving this project:
-
-> *"Where do claim denials concentrate, how much revenue is still unpaid because of them, and where should prevention and follow-up be prioritized?"*
-
-The project answers this question through a full analytics workflow: from profiling and validating seven source tables, to SQL Server analysis, to an interactive four-page Power BI dashboard.
-
-> **Note:** This is a portfolio project on **synthetic (generated) data**. MedCore Health Network is fictional. It is not real client work, employment experience, or real patient, provider or payer data.
+**An end-to-end healthcare Revenue Cycle Management (RCM) analytics project using Python, SQL Server, and Power BI to investigate claim denials, outstanding balances, payer performance, and payment recovery.**
 
 ---
 
-## 🛠️ Technology Stack
+## Project Overview
 
-| Tool | Purpose |
-|------|---------|
-| **Python** (pandas, Jupyter Notebook) | Data profiling, cleaning, validation |
-| **SQL Server** (SQL, SSMS) | Structured business analysis and reconciliation |
-| **Power BI Desktop** (DAX) | Interactive four-page dashboard |
+MedCore RCM is an end-to-end Data Analyst portfolio project based on a fictional multi-location Indian healthcare network, **MedCore Health Network**.
 
----
+The project focuses on understanding healthcare insurance claim performance and identifying where claim denials and outstanding financial balances are concentrated.
 
-## 📊 Dataset Summary
+The central business questions are:
 
-| Table | Rows | Description |
-|-------|------|-------------|
-| Claims | 50,000 | Claim amounts, service dates, denial flag and reason |
-| Claim_Authorization | 50,000 | Authorization requirement, status and dates |
-| Payments | 50,000 | Paid and outstanding amounts, recovery status |
-| Patients | 15,000 | Age and gender |
-| Providers | 40 | Provider type, location, specialty profile |
-| Payers | 8 | Seven private payers, one government payer |
-| Procedures | 24 | Procedure, specialty, authorization rule, claim-amount range |
+- What proportion of submitted claims are denied?
+- Which denial reasons, payers, specialties, and procedures have higher denial rates?
+- How much of the claimed amount remains outstanding?
+- Which claim categories contribute most to outstanding financial exposure?
+- How effectively are denied claims being recovered?
+- How quickly are authorization requests being approved?
 
-**Coverage:** Six locations: Chennai Central, East, North, South, West and Coimbatore
-**Period:** Claim service dates January – December 2025
-**Specialties:** Cardiology, Radiology, Orthopedics, Oncology, Neurology, Gastroenterology, General Medicine, Emergency Medicine
+The project follows a complete analytics workflow, from Python-based data profiling and validation to SQL Server business analysis and an interactive four-page Power BI dashboard.
 
-**Simplification:** authorization and payments have one row per claim. Real systems can have several authorization, payment or appeal events per claim.
+> **Data Disclaimer:** This is a portfolio project built using synthetic/generated data. MedCore Health Network is fictional. The dataset does not contain real patient, provider, payer, or hospital information. The findings are illustrative and should not be interpreted as actual healthcare industry benchmarks.
 
 ---
 
-## 🔄 End-to-End Pipeline
+## Technology Stack
 
+| Technology | Purpose |
+|---|---|
+| Python | Data profiling, cleaning, and validation |
+| Pandas | Data manipulation and quality checks |
+| Jupyter Notebook | Data exploration and documentation |
+| Microsoft SQL Server | Data storage, querying, and business analysis |
+| SQL / T-SQL | Joins, aggregations, CTEs, calculations, and validation |
+| Power BI Desktop | Interactive dashboard development |
+| DAX | Calculated columns and business measures |
+
+---
+
+## Dataset Overview
+
+The project uses seven related datasets containing **100,072 records across 40 columns**.
+
+| Table | Records | Description |
+|---|---:|---|
+| Patients | 15,000 | Patient age and gender |
+| Payers | 8 | Payer names and payer types |
+| Providers | 40 | Provider details, locations, and specialties |
+| Procedures | 24 | Procedure codes, specialties, and authorization requirements |
+| Claims | 50,000 | Claim details, amounts, service dates, and denial information |
+| Authorization | 50,000 | Authorization requirements, statuses, and approval dates |
+| Payments | 50,000 | Paid amounts, outstanding balances, and recovery statuses |
+| **Total** | **100,072** | **7 related tables** |
+
+### Dataset Coverage
+
+- **Locations:** Chennai Central, Chennai East, Chennai North, Chennai South, Chennai West, and Coimbatore.
+- **Payers:** 8.
+- **Providers:** 40.
+- **Specialties:** 8.
+- **Procedures:** 24.
+- **Service period:** January–December 2025.
+
+### Dataset Structure
+
+The Claims table acts as the central transaction table, connected to patient, payer, provider, procedure, authorization, and payment information.
+
+**Data modelling simplification:** Authorization and Payments contain one record per claim. Actual healthcare revenue cycle systems may contain multiple authorization requests, payment transactions, adjustments, and appeal events for a single claim.
+
+---
+
+## End-to-End Analytics Workflow
+
+```text
+Seven Source CSV Files
+          |
+          v
+Python - Data Profiling and Validation
+          |
+          v
+SQL Server - Data Storage and Analysis
+          |
+          v
+Power BI - Data Modelling and DAX
+          |
+          v
+Four-Page Interactive Dashboard
+          |
+          v
+Business Findings and Recommendations
 ```
-Raw CSVs (7 tables)
-    ↓
-Python — Profiling, Cleaning & Validation
-    ↓
-SQL Server — Business Analysis & Reconciliation
-    ↓
-Power BI — Interactive Dashboard (4 Pages)
-    ↓
-Findings & Recommendations
-```
 
 ---
 
-## 🐍 Phase 1 — Python: Profiling, Cleaning & Validation
+## Phase 1 — Python: Data Profiling and Validation
 
-### Checks Performed
-- Duplicate claim IDs, missing values and invalid ranges across all seven tables
-- Business rules: denied status matches denial flag, every denied claim has a reason, no non-denied claim has one
-- Authorization rules: approved authorizations have request date, approval date and ID; no approval before request
-- Financial reconciliation: `Claim_Amount = Paid_Amount + Outstanding_Amount` for every claim
-- Cross-table validation: claims to patients, providers, payers, procedures, authorization and payments, with zero mismatches
-- Procedure rules: authorization requirements, specialties and claim amounts validated against the procedure master
+Python and Pandas were used to inspect the seven source datasets and perform data quality checks before loading the data into SQL Server.
+
+### Data Quality Checks
+
+- Record counts and column-level inspection.
+- Duplicate checks across transaction and master tables.
+- Missing-value analysis.
+- Primary identifier uniqueness.
+- Foreign-key consistency across related datasets.
+- Claim status and denial flag consistency.
+- Validation of denial reasons against claim status.
+- Claim amount validation against procedure-level minimum and maximum amounts.
+- Authorization date and status validation.
+- Payment amount and outstanding balance reconciliation.
 
 ### Data Quality Decisions
-- **Nulls kept on purpose:** `Denial_Reason` is null for non-denied claims, authorization dates are null when no request exists, and payment dates are null where nothing was paid. Filling them with "Unknown" or invented dates would have created false data.
-- **Floating-point mismatch investigated:** an initial check flagged 10,895 reconciliation differences. They were precision differences, not errors, and rounding to two decimals brought the count to zero.
-- **Cleaning was light:** date-type standardization and monetary rounding. The data was generated to be consistent, so no rows were removed.
----
 
-## 🗄️ Phase 2 — SQL Server: Business Analysis
+- Null denial reasons were retained for non-denied claims because they are expected.
+- Missing authorization dates were retained where an approval had not occurred or no request existed.
+- Monetary reconciliation differences caused by floating-point precision were investigated and validated using two-decimal rounding.
+- Financial consistency was checked using:
 
-Analysis in SQL Server covers eleven business areas. Power BI figures were reconciled against these results.
+  `Claim Amount = Paid Amount + Outstanding Amount`
 
-| No. | Business Question | Technique |
-|-----|-------------------|-----------|
-| A | Overall claims, value, paid, outstanding and denial rate | SUM, COUNT, percentage calculations |
-| B | Denial rate by payer | JOIN, GROUP BY |
-| C | Denial count and denied value by reason | GROUP BY, aggregation |
-| D | Outstanding amount and rate on denied claims by reason | JOIN, GROUP BY |
-| E | Denied vs. non-denied claims: unpaid share | CASE WHEN, aggregation |
-| F | Denial rate and denied value by specialty | JOIN, GROUP BY |
-| G | Denial rate and denied value by procedure | JOIN, GROUP BY |
-| H | Denial rate by authorization status | JOIN, GROUP BY |
-| I | Outstanding amount and rate by payer | JOIN, GROUP BY |
-| J | Paid and outstanding by recovery status | JOIN, GROUP BY |
-| K | Monthly denial rate | Date functions, GROUP BY |
+- No records were removed simply to make the dataset appear cleaner.
 
 ---
 
-## 📈 Phase 3 — Power BI Dashboard
+## Phase 2 — SQL Server: Business Analysis
 
-Four-page interactive report with slicers (payer, specialty, location), KPI cards, heatmap matrices and a dedicated date table.
+The validated datasets were loaded into the `MedCore_RCM_Analytics` SQL Server database.
+
+SQL Server was used to perform business-focused analysis and investigate the relationships between claims, denials, authorizations, and payments.
+
+### Key SQL Investigations
+
+| No. | Business Analysis | SQL Techniques |
+|---|---|---|
+| 1 | Overall claim volume, claim value, paid amount, and outstanding amount | COUNT, SUM, aggregation |
+| 2 | Overall denial rate and claim status distribution | CASE, conditional aggregation |
+| 3 | Denial rate by payer | JOIN, GROUP BY |
+| 4 | Denial count and claim value by denial reason | GROUP BY, aggregation |
+| 5 | Outstanding amount and outstanding rate by denial reason | JOIN, conditional aggregation |
+| 6 | Denial rate and denied value by specialty | JOIN, GROUP BY |
+| 7 | Denial rate by procedure | JOIN, GROUP BY, HAVING |
+| 8 | Authorization status and denial performance | JOIN, conditional aggregation |
+| 9 | Denied claim payment recovery analysis | JOIN, SUM, percentage calculations |
+| 10 | Outstanding amount by payer and recovery status | GROUP BY, aggregation |
+| 11 | Monthly denial rate analysis | Date functions, GROUP BY |
+| 12 | High-value claim outstanding exposure | CASE, conditional aggregation |
+| 13 | Authorization approval turnaround | DATEDIFF, AVG, grouping |
+| 14 | Service-to-payment interval analysis | DATEDIFF, JOIN, AVG |
+
+The SQL analysis also included cross-table reconciliation and validation of the financial amounts used in the Power BI report.
+
+---
+
+## Phase 3 — Power BI: Interactive Dashboard
+
+An interactive four-page Power BI report was developed to present the analytical findings through KPIs, charts, comparisons, and detailed breakdowns.
+
+### Data Modelling
+
+- Connected Power BI to the SQL Server database.
+- Loaded the seven related tables.
+- Created a dedicated Date Table.
+- Established relationships between the central Claims table and relevant dimension and transaction tables.
+- Created DAX measures and calculated columns for business metrics.
+- Used slicers to support interactive analysis.
 
 ### Report Pages
 
 | Page | Focus | Key Visuals |
-|------|-------|-------------|
-| **Executive Summary** | Business overview | KPI cards, monthly denial rate, unpaid share (denied vs. non-denied), denial rate by payer, unpaid share by reason |
-| **Denial Root Causes** | Where denials concentrate | Denied count vs. value by reason, denial rate by specialty, top 10 procedures by value and by rate |
-| **Authorization & Recovery** | Authorization and unpaid money | Claims and denial rate by authorization status, unpaid share by status and payer, recovery status, top 10 providers |
-| **Drill-down Matrix** | Combinations to investigate | Payer × reason and specialty × reason heatmaps, reason × authorization status counts |
+|---|---|---|
+| **1. Claim Denial Analytics** | Overall claim performance | KPI cards, monthly denial rate trend, outstanding rate by denial status, denial rate by payer, outstanding rate by denial reason |
+| **2. Denial Root Causes** | Identifying denial patterns | Top 10 procedures by denied claim value, denied claim value by reason, outstanding denied amount by reason, denial rate by specialty, denied claim count by reason |
+| **3. Payment & Outstanding Analysis** | Financial exposure and recovery | Outstanding amount by claim value category, outstanding amount by recovery status, top 10 providers by outstanding amount, unpaid share by payer |
+| **4. Payer, Authorization & Denial Analysis** | Payer-level investigation and authorization turnaround | Outstanding amount by claim status, authorization approval turnaround distribution, denied claim value by payer and denial reason matrix |
 
-### Core DAX Measures Used
+### Key DAX Concepts
 
-```
-// Denial Rate
-Denial Rate =
-DIVIDE([Denied Claims], [Total Claims], 0)
+The report uses DAX for conditional calculations, filter context, aggregation, and percentage measures.
 
-// Denied Claim Value
-Denied Claim Value =
-CALCULATE([Total Claim Value], Claims_Clean[Denial_Flag] = 1)
+Examples of the calculations include:
 
-// Outstanding Rate
-Outstanding Rate =
-DIVIDE([Total Outstanding Amount], [Total Claim Value], 0)
-
-// Outstanding Amount on Denied Claims
-Denied Outstanding Amount =
-CALCULATE([Total Outstanding Amount], Claims_Clean[Denial_Flag] = 1)
-
-// Unpaid Share of Denied Value
-Denied Outstanding Rate =
-DIVIDE([Denied Outstanding Amount], [Denied Claim Value], 0)
-
-// Reconciliation Check (should equal 0)
-Reconciliation Difference =
-ROUND([Total Claim Value] - [Total Paid Amount] - [Total Outstanding Amount], 2)
-
-// Claim Group (calculated column)
-Claim Group =
-IF(Claims_Clean[Denial_Flag] = 1, "Denied", "Not Denied")
-```
+- Total claims and distinct claim counts.
+- Denied, paid, and pending claims.
+- Overall denial rate.
+- Total claim value and denied claim value.
+- Total paid and outstanding amounts.
+- Denied outstanding amount and outstanding rate.
+- Recovery status classification.
+- Authorization approval days and approval time categories.
+- Claim value categorization.
 
 ---
 
-## 📋 Key Findings
+## Key Business Findings
 
+The following findings are based on the corrected SQL Server database and the final Power BI report.
 
-### 💰 Overall Performance
-- **50,000 claims** worth **₹770.89M**: **₹643.09M paid** and **₹127.81M outstanding**
-- **4,042 denied claims**, an overall denial rate of **8.08%**
-- Denied claims are 8.08% of claims, but **58.70% of their value is unpaid**, compared with **11.58%** for non-denied claims
+### 1. Overall Claim Performance
 
-### 🧾 Denial Reasons
-- **Documentation Missing** is the most frequent reason (**849** claims)
-- **Missing Authorization** has the largest denied value (**₹21.85M**) and outstanding amount (**₹12.71M**)
-- Unpaid share of denied value ranges from **52.79% to 62.00%** across reasons (highest for Medical Necessity), so differences between reasons are small
-- Frequency and money point to different priorities
+| Metric | Result |
+|---|---:|
+| Total Claims | 50,000 |
+| Denied Claims | 4,137 |
+| Paid Claims | 43,113 |
+| Pending Claims | 2,750 |
+| Denial Rate | 8.27% |
+| Total Claim Value | ₹781.29M |
+| Total Paid Amount | ₹649.62M |
+| Total Outstanding Amount | ₹131.67M |
 
-### 🏦 Payers
-- **PrimeCare Health** has the highest denial rate (**10.32%**), **MediSure** the lowest (**6.46%**)
-- **HealthFirst** has the highest unpaid share (**20.07%**); **PrimeCare** has the largest outstanding amount (**₹18.77M**)
-- Claim, specialty and procedure mix were not adjusted, so payer comparisons show where to investigate, not what caused the difference
+The overall denial rate is 8.27%. The outstanding balance represents the portion of the original claim value that has not yet been collected in the dataset.
 
-### 🏥 Specialties & Procedures
-- **Oncology** has the highest specialty denial rate (**10.76%**); **Orthopedics** has the largest denied value (**₹30.17M**)
-- **Knee Replacement** carries **₹27.99M** of denied value (115 denials, about ₹243K each)
-- **Radiation Therapy** has the highest procedure denial rate (**12.81%**)
+### 2. Denial Reason Analysis
 
-### 🔐 Authorization
-- Denial rate is **6.72%** where authorization is not required, versus roughly **11%** for the other statuses; Approved (**10.74%**) is nearly as high as Not Requested (**11.13%**)
-- **417 of 566** Missing Authorization denials sit on claims whose authorization status is **Approved**, so status alone does not explain them
-- Denial reasons in this synthetic data do not appear to depend on authorization status
+| Denial Reason | Denied Claims | Denied Claim Value |
+|---|---:|---:|
+| Coding Error | 946 | ₹21.10M |
+| Documentation Missing | 916 | ₹14.35M |
+| Medical Necessity | 822 | ₹18.67M |
+| Eligibility Issue | 775 | ₹17.65M |
+| Timely Filing | 265 | ₹0.87M |
+| Missing Authorization | 236 | ₹10.59M |
+| Duplicate Claim | 177 | ₹0.49M |
 
-### 📅 Monthly Pattern
-- Monthly denial rate ranges from **7.45% (February)** to **8.84% (January)**
-- One year of data is not enough to show a trend or seasonality
+**Key finding:** Coding Error and Documentation Missing together account for approximately 45.01% of denied claims.
+
+Denial frequency and financial exposure do not always identify the same priorities. Therefore, both claim count and monetary value are important measures.
+
+### 3. Payer Performance
+
+- PrimeCare Health recorded the highest denial rate at **10.49%**.
+- MediSure Insurance recorded the lowest denial rate at **6.31%**.
+- The difference highlights areas for further payer-level investigation.
+
+Payer comparisons are descriptive. Claim, specialty, and procedure mix were not adjusted, so the results do not establish that a payer caused the differences.
+
+### 4. Denied Claim Recovery and Outstanding Exposure
+
+| Metric | Result |
+|---|---:|
+| Total Denied Claims | 4,137 |
+| Denied Claim Value | ₹83.72M |
+| Paid / Recovered Amount | ₹36.08M |
+| Outstanding Amount on Denied Claims | ₹47.64M |
+| Recovery Percentage | 43.09% |
+
+The analysis shows that approximately 43.09% of the denied claim value has been paid or recovered in the synthetic dataset, while ₹47.64M remains outstanding.
+
+Outstanding balances should not automatically be interpreted as permanent financial losses.
+
+### 5. Outstanding Exposure by Claim Value
+
+| Claim Category | Claims | Outstanding Amount |
+|---|---:|---:|
+| High Value (₹1L+) | 1,875 | ₹63.94M |
+| Medium Value (₹25K–₹1L) | 4,160 | ₹36.30M |
+| Low Value (Below ₹25K) | 43,965 | ₹31.43M |
+
+**Key finding:** High-value claims account for only 3.75% of all claims but contribute approximately 48.6% of the total outstanding amount.
+
+This indicates that monitoring high-value claims could be a useful financial follow-up priority.
+
+### 6. Authorization Approval Turnaround
+
+The authorization analysis identified 12,642 approved authorizations.
+
+| Approval Time | Approved Authorizations |
+|---|---:|
+| Same Day | 2,487 |
+| 1 Day | 2,478 |
+| 2–3 Days | 5,154 |
+| 4 Days | 2,523 |
+| **Total** | **12,642** |
+
+Additional findings:
+
+- Average approval time: **2.01 days**.
+- 60.04% of approved authorizations were completed within one day.
+- 80.04% were completed within three days.
+
+The turnaround analysis provides an operational view of authorization approval timing.
+
+### 7. Service-to-Payment Analysis
+
+An additional SQL investigation examined the number of days between claim service dates and payment dates.
+
+The average interval across payers was approximately **33.5 days**.
+
+**Important interpretation:** This is a service-to-payment interval, not actual payer processing time. The dataset does not contain claim submission or receipt dates, so the payer's processing duration cannot be established.
 
 ---
 
-## 💡 Business Recommendations
+## Business Recommendations
 
+Based on the descriptive and diagnostic findings, the following areas could be prioritised for further investigation.
 
-| Area | Recommendation |
-|------|---------------|
-| **Follow-up Priority** | Rank denied claims by outstanding amount for follow-up, adding claim age and appeal deadlines if that data becomes available |
-| **Authorization Review** | Review Missing Authorization denials at claim level, starting with the 417 that have an approved authorization on record |
-| **Denial Monitoring** | Monitor payer, denial reason, specialty and procedure together rather than payer-level rates alone |
-| **High-Value Procedures** | Add pre-submission checks (authorization, eligibility, coding, documentation) for Knee Replacement and Cardiac Catheterization |
-| **KPI Design** | Track count-based and value-based KPIs together: denial rate, denied value, outstanding amount, outstanding rate |
-| **Recurring Review** | Review denial metrics monthly and investigate unusual changes with more granular data |
+| Business Area | Recommendation |
+|---|---|
+| Denial Prevention | Review coding accuracy and documentation completeness, as these are the two most frequent denial categories. |
+| Financial Follow-up | Prioritise claims with higher outstanding balances for follow-up. |
+| High-Value Claims | Monitor high-value claims more closely because they account for a substantial share of outstanding exposure. |
+| Payer Monitoring | Review payer-level denial patterns alongside specialty and procedure information. |
+| Authorization Management | Monitor approval turnaround and investigate claims denied for missing authorization. |
+| Recovery Monitoring | Track denied claim recovery and outstanding balances by recovery status. |
+| Reporting and Review | Review denial rates, outstanding amounts, and recovery performance regularly. |
 
----
-
-## ⚠️ Limitations
-
-- Dataset is **synthetic**, generated for portfolio purposes only, not real healthcare data. It cannot establish industry benchmarks
-- Only one year of service dates, so no seasonality or long-term trend can be established
-- **Outstanding amount is not permanent loss**, and denied claim value is the original claim amount, not confirmed loss
-- Observed relationships are not causes. Payer comparisons are not adjusted for claim, specialty or procedure mix
-- Denial reasons do not appear to depend on authorization status, so reason-level findings are descriptive only
-- No appeal outcomes, claim aging or payer contract rules were modeled, so recovery probability cannot be estimated
-- Authorization and payments are simplified to one row per claim
-- No intervention was implemented or measured. No savings, reduced denials or recoveries are claimed
-- Scope is descriptive and diagnostic analytics. Predictive modelling is outside current scope
+These recommendations identify potential areas for operational review. No actual intervention or improvement in recovery was implemented or measured as part of this project.
 
 ---
 
+## Data Limitations and Assumptions
 
-## 👩‍💻 About
+- The dataset is synthetic and does not establish real healthcare industry benchmarks.
+- The analysis covers one year of service dates (2025), which is insufficient to establish long-term trends or seasonality.
+- Outstanding amounts represent balances in the dataset and should not be interpreted as confirmed permanent losses.
+- Denied claim value represents the original claim amount, not a confirmed financial loss.
+- Payer comparisons are not adjusted for differences in claim, specialty, or procedure mix.
+- Authorization and payment tables are simplified to one record per claim.
+- The dataset does not include claim submission dates, denial dates, appeal outcomes, or payer contract rules.
+- Service-to-payment days are therefore a proxy rather than a direct measure of payer processing time.
+- Authorization approval after the service date may indicate a delayed-authorization pattern, but the available fields do not establish the reason for denial.
+- No savings, improved denial rates, or additional recoveries are claimed because no intervention was implemented or measured.
+- The project focuses on descriptive and diagnostic analytics. Predictive modelling is outside the current scope.
+
+---
+
+## Project Outcomes
+
+This project demonstrates an end-to-end analytical workflow involving:
+
+- Python-based data profiling and quality validation.
+- SQL Server database creation and multi-table analysis.
+- Business-focused SQL queries and financial reconciliation.
+- Power BI data modelling and DAX calculations.
+- Interactive dashboard development.
+- Interpretation of operational and financial performance metrics.
+- Translation of analytical findings into business recommendations.
+
+---
+
+## About
 
 **Madhumitha Mathivanan**
-Junior Data Engineer → Aspiring Data Analyst
+
+Aspiring Data Analyst | SQL | Python | Power BI | Excel
+
+Interested in data analysis, business reporting, SQL-based problem solving, and transforming data into meaningful business insights.
+
+---
+
+**Project:** MedCore RCM — Healthcare Claim Denial Analytics  
+**Data Type:** Synthetic / Generated  
+**Tools:** Python, SQL Server, Power BI
